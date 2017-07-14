@@ -7,8 +7,8 @@ Majors dependencies :
 - Spring and apache commons
 
 Dependencies by components :
-Xml utils => jdom2 + jaxen 
-Json utils => gson + jackson 
-Image utils => imgscalr-lib => https://github.com/rkalla/imgscalr
-Ssh client => jcabi-ssh => https://github.com/jcabi/jcabi-ssh
-Ftp Client => commons-net => https://github.com/apache/commons-net
+- Xml utils => jdom2 + jaxen 
+- Json utils => gson + jackson 
+- Image utils => imgscalr-lib => https://github.com/rkalla/imgscalr
+- Ssh client => jcabi-ssh => https://github.com/jcabi/jcabi-ssh
+- Ftp Client => commons-net => https://github.com/apache/commons-net
