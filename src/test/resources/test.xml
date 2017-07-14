@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<allthecontent xmlns="http://www.allthecontent.com/xml/delivery/generic/contents" version="1.0" created="2017-03-12T18:24:29.817+01:00">
+    <content uid="2f7c5e18-e833-4799-ad41-c8940ddc70d0" refid="tag:reuters.com,2017:newsml_KBN16J0VV" version="1" versiondate="2017-03-12T17:20:59.000+01:00">
+        <title>Desafiador, promotor dos EUA é demitido pelo governo Trump</title>
+        <description>Por Andy Sullivan e Mark Hosenball</description>
+        <credits>(c) Copyright Thomson Reuters 2017. Click For Restrictions - http://about.reuters.com/fulllegal.asp</credits>
+        <pubdate>2017-03-12T17:20:59.000+01:00</pubdate>
+        <lang code="pt">Portuguese</lang>
+        <contenttype code="news">News</contenttype>
+        <coremedia code="text">Text</coremedia>
+        <format code="text_full">Full</format>
+        <theme code="reuters_OBRWDM">Reuters Brazil Online Report World News</theme>
+        <theme code="reuters_OBRTPM">Reuters Brazil Online Report Top News</theme>
+        <license>
+            <modification allowed="false"/>
+            <multimediatisation allowed="false"/>
+            <localisation allowed="false"/>
+            <distribution allowed="false"/>
+        </license>
+        <keywords>
+            <value>EUA</value>
+            <value>TRUMP</value>
+            <value>JUSTICA</value>
+        </keywords>
+        <tag code="characters" name="Chars">
+            <value>2230</value>
+        </tag>
+        <tag code="words" name="Words">
+            <value>361</value>
+        </tag>
+        <item uid="4cc5ff8c-1a50-455a-8d3c-a0f34ab99ae1" mimetype="text/plain" filename="58c5844dea13a7579298db50_58c5844dea13a7579298db52.txt"/>
+        <item uid="865da4f4-f7d6-42f7-8ed2-9eb16b4bb2f6" mimetype="text/xhtml" filename="58c5844dea13a7579298db50_58c5844dea13a7579298db54.xhtml"/>
+    </content>
+</allthecontent>
