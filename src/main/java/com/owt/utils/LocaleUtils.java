@@ -48,7 +48,7 @@ public final class LocaleUtils
 
             if (parts.length > 0 && parts.length < MAX_LOCAL_PARTS) {
 
-                final String language = parts.length > 0 ? parts[0] : "";
+                final String language = parts[0];
                 final String country = parts.length > 1 ? parts[1] : "";
                 final String variant = parts.length > 2 ? parts[2] : "";
 

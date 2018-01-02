@@ -16,8 +16,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.jcabi.ssh.SSH;
 import com.jcabi.ssh.Shell;
+import com.jcabi.ssh.Ssh;
 import com.owt.client.SshClient;
 import com.owt.mock.ssh.MockCommandCreator;
 import com.owt.mock.ssh.MockSshServerBuilder;
@@ -102,7 +102,7 @@ public class SshClientTest
      */
     private static int getPort() throws IOException
     {
-        int port = SSH.PORT;
+        int port = Ssh.PORT;
 
         try (final ServerSocket socket = new ServerSocket(0)) {
             port = socket.getLocalPort();

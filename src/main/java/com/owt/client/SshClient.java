@@ -12,8 +12,8 @@ import org.apache.commons.io.input.NullInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.jcabi.ssh.SSH;
 import com.jcabi.ssh.Shell;
+import com.jcabi.ssh.Ssh;
 
 /**
  * SshUtils, utility class for ssh activity (ssh/scp) using SSHClient
@@ -32,14 +32,14 @@ public final class SshClient
 
     public static Shell connect(final String hostname, final String username, final String privateKey)
     {
-        return connect(hostname, username, SSH.PORT, privateKey);
+        return connect(hostname, username, Ssh.PORT, privateKey);
     }
 
     public static Shell connect(final String hostname, final String username, final int port, final String privateKey)
     {
         if (isNoneEmpty(hostname, username, privateKey)) {
             try {
-                final SSH shell = new SSH(hostname, port, username, privateKey);
+                final Ssh shell = new Ssh(hostname, port, username, privateKey);
 
                 if (isConnected(shell)) {
                     return shell;
@@ -63,7 +63,7 @@ public final class SshClient
         if (isNoneEmpty(localPath, remotePath)) {
             try {
                 try (final InputStream inputStream = new FileInputStream(localPath)) {
-                    return shell != null && executeRemoteCmd(shell, String.format("cat > %s", SSH.escape(remotePath)), inputStream) == 0;
+                    return shell != null && executeRemoteCmd(shell, String.format("cat > %s", Ssh.escape(remotePath)), inputStream) == 0;
                 }
             }
             catch (final IOException e) {
@@ -77,7 +77,7 @@ public final class SshClient
     {
         if (isNotEmpty(remoteDirectory)) {
             try {
-                return shell != null && executeRemoteCmd(shell, String.format("mkdir -p %s", SSH.escape(remoteDirectory))) == 0;
+                return shell != null && executeRemoteCmd(shell, String.format("mkdir -p %s", Ssh.escape(remoteDirectory))) == 0;
             }
             catch (final IOException e) {
                 LOGGER.info("Fail to create remote directory {}", remoteDirectory, e);
@@ -90,7 +90,7 @@ public final class SshClient
     {
         if (isNotEmpty(remotePath)) {
             try {
-                return shell != null && executeRemoteCmd(shell, String.format("rm -f %s", SSH.escape(remotePath))) == 0;
+                return shell != null && executeRemoteCmd(shell, String.format("rm -f %s", Ssh.escape(remotePath))) == 0;
             }
             catch (final IOException e) {
                 LOGGER.info("Fail to remote delete {}", remotePath, e);
@@ -103,7 +103,7 @@ public final class SshClient
     {
         if (isNotEmpty(remotePath)) {
             try {
-                return shell != null && executeRemoteCmd(shell, String.format("rm -rf %s", SSH.escape(remotePath))) == 0;
+                return shell != null && executeRemoteCmd(shell, String.format("rm -rf %s", Ssh.escape(remotePath))) == 0;
             }
             catch (final IOException e) {
                 LOGGER.info("Fail to remote delete {}", remotePath, e);

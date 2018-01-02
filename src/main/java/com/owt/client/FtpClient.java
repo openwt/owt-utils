@@ -26,6 +26,8 @@ import org.slf4j.LoggerFactory;
  */
 public class FtpClient extends FTPClient
 {
+    private static final String DELIMITER = "/";
+
     private static final String FTP_DISCONNECTED_MSG = "Unable to list remote directory, ftp is disconnected";
 
     private static final Logger LOGGER = LoggerFactory.getLogger(FtpClient.class);
@@ -77,7 +79,8 @@ public class FtpClient extends FTPClient
         if (isNotEmpty(directory)) {
             // change current directory
             changeWorkingDirectory(directory);
-            LOGGER.info("Current directory is now {}", printWorkingDirectory());
+            final String currentDir = printWorkingDirectory();
+            LOGGER.info("Current directory is now {}", currentDir);
         }
     }
 
@@ -128,16 +131,14 @@ public class FtpClient extends FTPClient
         }
 
         if (ftpFile != null && ftpFile.isFile()) {
-            final String remoteFilePath = remoteDirectory + "/" + ftpFile.getName();
-            final String filePath = outputDirectory + "/" + ftpFile.getName();
+            final String remoteFilePath = remoteDirectory + DELIMITER + ftpFile.getName();
+            final String filePath = outputDirectory + DELIMITER + ftpFile.getName();
             LOGGER.debug("Get ftp file {} to local file {}", remoteFilePath, filePath);
 
             try (FileOutputStream fos = new FileOutputStream(filePath)) {
                 try (InputStream is = retrieveFileStream(remoteFilePath)) {
                     IOUtils.copy(is, fos);
                     fos.flush();
-                    IOUtils.closeQuietly(is);
-                    IOUtils.closeQuietly(fos);
                 }
             }
 

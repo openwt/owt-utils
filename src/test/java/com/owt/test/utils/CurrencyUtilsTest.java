@@ -15,7 +15,7 @@ import org.junit.Test;
  *
  * @author Loïc Bernollin Open Web Technology
  * @since 5 nov. 2015
- * 
+ *
  */
 public class CurrencyUtilsTest
 {
@@ -25,7 +25,7 @@ public class CurrencyUtilsTest
     {
         final String targetAmount = convertAmount(0.00, 0.00, new Locale("en", "US"));
         assertNotNull(targetAmount);
-        assertEquals(targetAmount, "");
+        assertEquals("", targetAmount);
     }
 
     @Test
@@ -33,7 +33,7 @@ public class CurrencyUtilsTest
     {
         final String targetAmount = convertAmount(1.00, 0.90, new Locale("en", "US"));
         assertNotNull(targetAmount);
-        assertEquals(targetAmount, "0.90");
+        assertEquals("0.90", targetAmount);
     }
 
     @Test

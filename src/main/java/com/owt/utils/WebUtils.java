@@ -134,6 +134,7 @@ public final class WebUtils
      * @param raw UTF-8 string to encode
      * @return HTML-encoded String
      */
+    @Deprecated
     public static String htmlEncode(final String raw)
     {
         final StringBuilder html = new StringBuilder();
