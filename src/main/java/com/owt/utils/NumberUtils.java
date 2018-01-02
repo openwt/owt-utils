@@ -45,8 +45,12 @@ public final class NumberUtils
      *
      * It returns true when passed any of:
      *
-     * any negative int/Integer any negative long/Long any negative float/Float any negative
-     * double/Double Double.NEGATIVE_INFINITY Float.NEGATIVE_INFINITY
+     * any negative int/Integer
+     * any negative long/Long
+     * any negative float/Float
+     * any negative double/Double
+     * Double.NEGATIVE_INFINITY
+     * Float.NEGATIVE_INFINITY
      *
      * and false otherwise.
      *

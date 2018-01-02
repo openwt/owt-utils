@@ -28,4 +28,9 @@ public final class ArrayUtils
         return IntStream.concat(Arrays.stream(a), Arrays.stream(b)).toArray();
     }
 
+    public static <T> T last(final T[] array)
+    {
+        return org.apache.commons.lang3.ArrayUtils.isEmpty(array) ? null : array[array.length - 1];
+    }
+
 }

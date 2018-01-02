@@ -1,5 +1,7 @@
 package com.owt.utils;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 import org.slf4j.Logger;
@@ -15,7 +17,6 @@ public final class Base64Utils
 {
     private static final String BASE64_ERROR_MSG = "BASE64: Exception occured";
     private static final Logger LOGGER = LoggerFactory.getLogger(Base64Utils.class);
-    private static final String DEFAULT_ENCODING = "UTF-8";
 
     /**
      * Base64Utils constructor
@@ -43,7 +44,7 @@ public final class Base64Utils
      */
     public static String decodeToString(final String string)
     {
-        return decodeToString(string, DEFAULT_ENCODING);
+        return decodeToString(string, StandardCharsets.UTF_8);
     }
 
     /**
@@ -53,7 +54,7 @@ public final class Base64Utils
      * @param encoding
      * @return decoded string or null if an exception occurred
      */
-    public static String decodeToString(final String string, final String encoding)
+    public static String decodeToString(final String string, final Charset encoding)
     {
         try {
             return new String(Base64.getDecoder().decode(string), encoding);
@@ -100,7 +101,7 @@ public final class Base64Utils
      */
     public static String encodeToString(final String string)
     {
-        return encodeToString(string, DEFAULT_ENCODING);
+        return encodeToString(string, StandardCharsets.UTF_8);
     }
 
     /**
@@ -110,7 +111,7 @@ public final class Base64Utils
      * @param encoding
      * @return encoded string or null if an exception occurred
      */
-    public static String encodeToString(final String string, final String encoding)
+    public static String encodeToString(final String string, final Charset encoding)
     {
         try {
             return Base64.getEncoder().encodeToString(string.getBytes(encoding));

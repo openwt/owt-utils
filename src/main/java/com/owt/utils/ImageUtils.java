@@ -2,6 +2,9 @@ package com.owt.utils;
 
 import static org.imgscalr.Scalr.resize;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Transparency;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,7 +29,7 @@ import org.imgscalr.Scalr.Mode;
  */
 public final class ImageUtils
 {
-    private static final String OUTPUT_FORMAT = "JPG";
+    private static final String DEFAULT_OUTPUT_FORMAT = "JPG";
 
     private ImageUtils()
     {
@@ -60,12 +63,43 @@ public final class ImageUtils
 
     public static void resizeImageToFile(final BufferedImage inputImage, final File output, final int targetWidth, final int targetHeight) throws IOException
     {
-        ImageIO.write(resizeImage(inputImage, targetWidth, targetHeight), OUTPUT_FORMAT, output);
+        writeImage(resizeImage(inputImage, targetWidth, targetHeight), output);
     }
 
     public static void resizeImageToFile(final BufferedImage inputImage, final File output, final int targetSize) throws IOException
     {
-        ImageIO.write(resizeImage(inputImage, targetSize), OUTPUT_FORMAT, output);
+        writeImage(resizeImage(inputImage, targetSize), output);
+    }
+
+    public static BufferedImage fillTransparentPixels(final BufferedImage image)
+    {
+        final int w = image.getWidth();
+        final int h = image.getHeight();
+        final BufferedImage updatedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+        final Graphics2D g = updatedImage.createGraphics();
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, w, h);
+        g.drawRenderedImage(image, null);
+        g.dispose();
+        return updatedImage;
+    }
+
+    private static boolean isNotOpaque(final BufferedImage inputImage)
+    {
+        return inputImage.getColorModel().getTransparency() != Transparency.OPAQUE;
+    }
+
+    public static void writeImage(final BufferedImage inputImage, final File output) throws IOException
+    {
+        // ensure the image is writable
+        final BufferedImage writableInputImage = isNotOpaque(inputImage) ? fillTransparentPixels(inputImage) : inputImage;
+        // finally write the image !
+        writeImage(writableInputImage, output, DEFAULT_OUTPUT_FORMAT);
+    }
+
+    public static void writeImage(final BufferedImage inputImage, final File output, final String outputFormat) throws IOException
+    {
+        ImageIO.write(inputImage, outputFormat, output);
     }
 
     public static void resizeAndCompressImage(final BufferedImage inputImage, final File outputImage, final int targetWidth, final int targetHeight, final float quality)
@@ -79,18 +113,23 @@ public final class ImageUtils
         compressImage(resizeImage(inputImage, targetSize), outputImage, quality);
     }
 
-    public static void compressImage(final BufferedImage image, final File outputImage, final float quality) throws IOException
+    public static void compressImage(final BufferedImage inputImage, final File outputImage, final float quality) throws IOException
     {
         try (OutputStream os = new FileOutputStream(outputImage)) {
 
-            final ImageWriter writer = ImageIO.getImageWritersByFormatName(OUTPUT_FORMAT).next();
+            // ensure the image is writable
+            final BufferedImage writableInputImage = isNotOpaque(inputImage) ? fillTransparentPixels(inputImage) : inputImage;
+
+            // configure the writer compression
+            final ImageWriter writer = ImageIO.getImageWritersByFormatName(DEFAULT_OUTPUT_FORMAT).next();
             writer.setOutput(ImageIO.createImageOutputStream(os));
 
             final ImageWriteParam param = writer.getDefaultWriteParam();
             param.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
             param.setCompressionQuality(quality);
-            writer.write(null, new IIOImage(image, null, null), param);
-            os.close();
+
+            // finally write the image !
+            writer.write(null, new IIOImage(writableInputImage, null, null), param);
             writer.dispose();
         }
     }

@@ -1,6 +1,8 @@
 package com.owt.utils;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,5 +35,15 @@ public final class CollectionUtils
     public static boolean isNotEmpty(final Map<?, ?> map)
     {
         return !isEmpty(map);
+    }
+
+    public static <T> List<T> defaultIfEmpty(final List<T> list, final List<T> defaultList)
+    {
+        return isNotEmpty(list) ? list : defaultList;
+    }
+
+    public static <T> List<T> defaultToEmpty(final List<T> list)
+    {
+        return defaultIfEmpty(list, Collections.emptyList());
     }
 }

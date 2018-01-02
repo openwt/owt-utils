@@ -37,13 +37,6 @@ public final class CurrencyUtils
 
     }
 
-    /**
-     *
-     *
-     * @param baseAmount
-     * @param ratePerUsd
-     * @return
-     */
     public static String convertAmount(final double baseAmount, final double ratePerUsd)
     {
         if (baseAmount > 0.00 && ratePerUsd > 0.00) {
@@ -52,14 +45,6 @@ public final class CurrencyUtils
         return "";
     }
 
-    /**
-     *
-     *
-     * @param baseAmount
-     * @param ratePerUsd
-     * @param locale
-     * @return
-     */
     public static String convertAmount(final double baseAmount, final double ratePerUsd, final Locale locale)
     {
         if (baseAmount > 0.00 && ratePerUsd > 0.00) {

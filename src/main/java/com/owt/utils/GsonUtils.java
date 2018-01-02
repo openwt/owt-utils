@@ -1,6 +1,5 @@
 package com.owt.utils;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -8,10 +7,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import com.fasterxml.jackson.annotation.JsonInclude.Include;
-import com.fasterxml.jackson.core.JsonParseException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -20,67 +15,20 @@ import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
 /**
- * JsonUtils, utility class for json parsing and conversion
+ * GsonUtils, utility class for using gson library
  *
  * @author DBO, Open Web Technology
  * @since 1 july 2015
  *
  */
-public final class JsonUtils
+public final class GsonUtils
 {
     private static JsonParser jsonParser = new JsonParser();
 
-    private JsonUtils()
+    private GsonUtils()
     {
     }
 
-    private static ObjectMapper buildObjectMapper()
-    {
-        return JacksonUtils.getObjectMapperBuilder().serializationInclusion(Include.NON_NULL).build();
-    }
-
-    /* Jackson Methods */
-    /**
-     * Convert and Object into Byte.
-     *
-     * @param object to convert
-     * @return the string
-     * @throws IOException
-     */
-    public static byte[] convertObjectToJsonBytes(final Object object) throws IOException
-    {
-        return buildObjectMapper().writeValueAsBytes(object);
-    }
-
-    /**
-     * Convert and Object into json string.
-     *
-     * @param object to convert
-     * @return the string
-     * @throws IOException
-     */
-    public static String convertObjectToJsonString(final Object object) throws IOException
-    {
-        return buildObjectMapper().writeValueAsString(object);
-    }
-
-    /**
-     * Convert a Json String into a typed element.
-     *
-     * @param strJson String to convert
-     * @param klass expected type
-     * @return T
-     * @throws IOException
-     * @throws JsonMappingException
-     * @throws JsonParseException
-     */
-    public static <T> T convertJsonStringToObject(final String strJson, final Class<T> klass) throws IOException
-    {
-        return buildObjectMapper().readValue(strJson, klass);
-    }
-
-    // TODO: try to remove this methods and the gson dependency and use only jackson
-    /* GSON Methods */
     public static <T> JsonArray convertCollectionToJsonArray(final List<T> collection)
     {
         return new Gson().toJsonTree(collection).getAsJsonArray();

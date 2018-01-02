@@ -1,7 +1,18 @@
 package com.owt.utils;
 
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,5 +46,54 @@ public final class FileUtils
             LOGGER.warn("Fail to download {}", remoteUrl, e);
         }
         return false;
+    }
+
+    /**
+     * Create a file with content
+     *
+     * @param filePath
+     * @param fileContent
+     * @return if the file has been created
+     */
+    public static boolean createFileWithContent(final File file, final String fileContent)
+    {
+        try {
+            if (file != null && isNotBlank(fileContent)) {
+                LOGGER.debug("Write {} into file {}", fileContent, file.getName());
+                org.apache.commons.io.FileUtils.writeStringToFile(file, fileContent, StandardCharsets.UTF_8);
+                return true;
+            }
+        }
+        catch (final IOException e) {
+            LOGGER.warn("Cannot create file", e);
+
+        }
+        return false;
+    }
+
+    /**
+     * Get the content of a remote file
+     *
+     * @param remoteUrl
+     * @return each lines of the file
+     */
+    public static List<String> getRemoteFileContent(final String remoteUrl)
+    {
+        try {
+            if (isNotBlank(remoteUrl)) {
+                final InputStream remoteInputStream = new URL(remoteUrl).openStream();
+                try (BufferedReader reader = new BufferedReader(new InputStreamReader(remoteInputStream))) {
+                    return reader.lines().collect(Collectors.toList());
+                }
+            }
+        }
+        catch (final FileNotFoundException fileNotFoundException) {
+            LOGGER.info("Failed to get remote file content for {} cause {}", remoteUrl, LOGGER.isDebugEnabled() ? fileNotFoundException : fileNotFoundException.getMessage());
+        }
+        catch (final IOException e) {
+            LOGGER.warn("Failed to get remote file content for {}", remoteUrl, e);
+        }
+
+        return new ArrayList<>();
     }
 }

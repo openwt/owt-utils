@@ -1,17 +1,15 @@
 package com.owt.utils;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-
-import java.util.Arrays;
-import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.CharUtils;
 import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.validator.routines.InetAddressValidator;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.CacheControl;
 
 /**
  * WebUtils, utility class web related
@@ -22,14 +20,93 @@ import org.apache.commons.validator.routines.InetAddressValidator;
  */
 public final class WebUtils
 {
-    public static final String HEADER_X_REQUESTED_WITH = "X-Requested-With";
-    public static final String HEADER_HTTP_X_FORWARDED_FOR = "X-Forwarded-For";
-    public static final String XHR = "XMLHttpRequest";
-    public static final String HTTP_JSON_RESPONSE_CONTEXT = "application/json";
+    private static final String XHR = "XMLHttpRequest";
+
+    private static final String HTTP_PROTOCOL = "http";
+    private static final String HTTP_PREFIX = HTTP_PROTOCOL + "://";
+
+    /* HTTP HEADERS */
+    private static final String HTTP_HEADER_X_REQUESTED_WITH = "X-Requested-With";
+
+    /* Header Cache Constants */
+    private static final String HEADER_CACHE_CONTROL = "Cache-Control";
+    private static final String HEADER_CACHE_PRAGMA = "Pragma";
+
+    private static final String HEADER_CACHE_VALUE_NO_CACHE = "no-cache";
+    private static final String HEADER_CACHE_CONTROL_VALUE = "max-age=0, private, must-revalidate, no-cache, no-store";
+
+    private static final String HEADER_ACCESS_CONTROL_ALLOW_ORIGIN = "Access-Control-Allow-Origin";
+    private static final String HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS = "Access-Control-Allow-Credentials";
+
+    private static final String HEADER_CACHE_DATE_EXPIRES = "Expires";
+    private static final Integer HEADER_CACHE_DATE_EXPIRES_ZERO = 0;
+
+    // Official RFC 5322 regex implementation with limitation on domain name
+    private static final String EMAIL_REGEX = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
 
     private WebUtils()
     {
 
+    }
+
+    public static Object getSessionAttribute(final HttpServletRequest request, final String name)
+    {
+        return org.springframework.web.util.WebUtils.getSessionAttribute(request, name);
+    }
+
+    public static void setSessionAttribute(final HttpServletRequest request, final String name, final Object value)
+    {
+        org.springframework.web.util.WebUtils.setSessionAttribute(request, name, value);
+    }
+
+    /**
+     * Set Response without cache.
+     *
+     * @param response response to set
+     * @throws Exception if invalide Argument
+     */
+    public static void setNoCache(final HttpServletResponse response)
+    {
+        if (response != null) {
+            response.setHeader(HEADER_CACHE_CONTROL, HEADER_CACHE_CONTROL_VALUE); // HTTP 1.1
+            response.setHeader(HEADER_CACHE_PRAGMA, HEADER_CACHE_VALUE_NO_CACHE); // HTTP 1.
+            response.setDateHeader(HEADER_CACHE_DATE_EXPIRES, HEADER_CACHE_DATE_EXPIRES_ZERO); // Proxies.
+        }
+    }
+
+    /**
+     * Set Response with cache.
+     *
+     * @param response response to set
+     * @throws Exception if invalide Argument
+     */
+    public static void setCache(final HttpServletResponse response, final CacheControl cacheControl)
+    {
+        if (response != null) {
+            if (cacheControl != null) {
+                response.setHeader(HEADER_CACHE_CONTROL, cacheControl.getHeaderValue()); // HTTP
+            } else {
+                setNoCache(response);
+            }
+        }
+    }
+
+    /**
+     * Set the access control headers.
+     *
+     * @param routeService the routeService
+     * @param request the HTTP request
+     * @param response the HTTP response
+     */
+    public static void setAccessControlHeader(final String url, final HttpServletResponse response)
+    {
+        response.setHeader(HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, url);
+        response.setHeader(HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
+    }
+
+    public static String addHttpPrefixToUrlIfMissing(final String url)
+    {
+        return StringUtils.isBlank(url) || url.toLowerCase().startsWith(HTTP_PROTOCOL) ? url : HTTP_PREFIX + url;
     }
 
     /**
@@ -40,79 +117,14 @@ public final class WebUtils
      */
     public static boolean isXhr(final HttpServletRequest request)
     {
-        return XHR.equals(request.getHeader(HEADER_X_REQUESTED_WITH));
-    }
-
-    /**
-     * Return the client IP from headers
-     *
-     * @param HttpServletRequest request request to check
-     * @return String
-     */
-    public static String getClientIP(final HttpServletRequest request)
-    {
-        String ipAddress = "";
-
-        if (request != null) {
-            ipAddress = request.getHeader(HEADER_HTTP_X_FORWARDED_FOR);
-            if (isEmpty(ipAddress) || isNotValidIP(ipAddress)) {
-                ipAddress = request.getRemoteAddr();
-            }
-        }
-
-        return ipAddress;
-    }
-
-    /**
-     * Checks if the specified string is a not valid IP address.
-     *
-     * @param ipAddress the string to validate
-     * @return true if the string validates as not an IP address
-     */
-    public static boolean isNotValidIP(final String ipAddress)
-    {
-        return !isValidIP(ipAddress);
-    }
-
-    /**
-     * Checks if the specified string is a valid IP address.
-     *
-     * @param ipAddress the string to validate
-     * @return true if the string validates as an IP address
-     */
-    public static boolean isValidIP(final String ipAddress)
-    {
-        // TODO: add support for ip v6
-        return InetAddressValidator.getInstance().isValidInet4Address(ipAddress);
+        return XHR.equals(request.getHeader(HTTP_HEADER_X_REQUESTED_WITH));
     }
 
     public static boolean isValidEmail(final String email)
     {
-        // Official RFC 5322 regex implementation with limitation on domain name
-        final String regex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
-        final Pattern regexPattern = Pattern.compile(regex);
+        final Pattern regexPattern = Pattern.compile(EMAIL_REGEX);
         final Matcher match = regexPattern.matcher(email);
         return match.matches();
-    }
-
-    public static boolean matchRequestUri(final HttpServletRequest request, final List<String> urlPattern)
-    {
-        return request != null
-                && request.getRequestURI() != null
-                && urlPattern.stream().anyMatch(request.getRequestURI()::contains);
-
-    }
-
-    /**
-     * Return true if the request URI is matched by the url pattern
-     *
-     * @param request
-     * @param urlPattern
-     * @return
-     */
-    public static boolean matchRequestUri(final HttpServletRequest request, final String... urlPattern)
-    {
-        return matchRequestUri(request, Arrays.asList(urlPattern));
     }
 
     /**

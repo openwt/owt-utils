@@ -50,8 +50,9 @@ public final class XmlUtils
     }
 
     /**
-     * Get a {@code SAXBuilder} that ignores namespaces. Any namespaces present in the xml input to
-     * this builder will be omitted from the resulting {@code Document}.
+     * Get a {@code SAXBuilder} that ignores namespaces.
+     * Any namespaces present in the xml input to this builder will be omitted from the resulting
+     * {@code Document}.
      */
     public static SAXBuilder getSAXBuilder()
     {

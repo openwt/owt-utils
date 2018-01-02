@@ -5,6 +5,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
 
 import org.junit.Test;
 
@@ -39,7 +40,7 @@ public final class Base64UtilsTest
     @Test
     public void testEncodeToStringWithOtherEncoding()
     {
-        final String encoded = Base64Utils.encodeToString("ABC", "ISO-8859-1");
+        final String encoded = Base64Utils.encodeToString("ABC", Charset.forName("ISO-8859-1"));
         assertNotNull(encoded);
         assertEquals("QUJD", encoded);
     }
@@ -71,7 +72,7 @@ public final class Base64UtilsTest
     @Test
     public void testDecodeStringWithOtherEncoding()
     {
-        final String decoded = Base64Utils.decodeToString("QUJD", "ISO-8859-1");
+        final String decoded = Base64Utils.decodeToString("QUJD", Charset.forName("ISO-8859-1"));
         assertNotNull(decoded);
         assertEquals("ABC", decoded);
     }
