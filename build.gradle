@@ -42,30 +42,30 @@ dependencies {
 
 	// spring boot dependencies
 	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: springBootVersion
-
-    // json dependencies
-  	compile group: 'com.google.code.gson', name: 'gson', version: gsonVersion
-
+	
+	// json dependencies
+	compile group: 'com.google.code.gson', name: 'gson', version: gsonVersion
+	
 	// xml/xpath dependencies
 	compile group: 'org.jdom', name: 'jdom2', version: jdomVersion
 	compile group: 'jaxen', name: 'jaxen', version: jaxenVersion
-
+	
 	// miscellaneous
-    compile group: 'org.apache.commons', name: 'commons-lang3', version: commonsLangVersion
-    compile group: 'commons-io', name: 'commons-io', version: commonsIoVersion
-   	compile group: 'commons-net', name: 'commons-net', version: commonsNetVersion
-   	compile group: 'commons-validator', name: 'commons-validator', version: commonsValidatorVersion
-       		
-    // image scaling
-    compile group: 'org.imgscalr', name: 'imgscalr-lib', version: imgscalrVersion
-    
-    // ssh utility
-    compile group: 'com.jcabi', name: 'jcabi-ssh', version: sshVersion
-    compile group: 'org.aspectj', name: 'aspectjweaver', version: aspectjVersion
-    
-    // test dependencies
-    testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion
-    testCompile group: 'org.mockftpserver', name: 'MockFtpServer', version: mockFtpServerVersion
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: commonsLangVersion
+	compile group: 'commons-io', name: 'commons-io', version: commonsIoVersion
+	compile group: 'commons-net', name: 'commons-net', version: commonsNetVersion
+	compile group: 'commons-validator', name: 'commons-validator', version: commonsValidatorVersion
+	   		
+	// image scaling
+	compile group: 'org.imgscalr', name: 'imgscalr-lib', version: imgscalrVersion
+	
+	// ssh utility
+	compile group: 'com.jcabi', name: 'jcabi-ssh', version: sshVersion
+	compile group: 'org.aspectj', name: 'aspectjweaver', version: aspectjVersion
+	
+	// test dependencies
+	testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion
+	testCompile group: 'org.mockftpserver', name: 'MockFtpServer', version: mockFtpServerVersion
 	compile group: 'org.apache.sshd', name: 'sshd-core', version: sshDeamonVersion
 }
 
