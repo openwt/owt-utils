@@ -1,6 +1,6 @@
 # owt-utils
 
-Bunch of utility classes for Java 8 / Spring Boot project
+Bunch of utility classes for Java 11 / Spring Boot project
 in a various state and quality (test coverage around 60%) 
 
 Majors dependencies :
