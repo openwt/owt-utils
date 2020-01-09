@@ -1,58 +1,47 @@
 package com.owt.test.utils;
 
-import static com.owt.test.ThrowableAssertion.assertThrown;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
-import javax.imageio.IIOException;
-
+import com.owt.utils.ImageUtils;
 import org.apache.commons.io.FileUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.core.io.ClassPathResource;
 
-import com.owt.utils.ImageUtils;
+import javax.imageio.IIOException;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
+import static com.owt.test.ThrowableAssertion.assertThrown;
+import static org.junit.Assert.*;
 
 /**
  * Created by Open Web Technology.
  *
  * @author Loïc Bernollin Open Web Technology
  * @since 15 oct. 2015
- * 
  */
-public class ImageUtilsTest
-{
-    // TODO: use something less volatile than a linkedin image
-    private static final String REMOTE_IMG_URL = "https://media.licdn.com/mpr/mpr/shrink_200_200/AAEAAQAAAAAAAAWVAAAAJDE3ZTM2OTM2LTQ0NmUtNGViNS1hN2RkLWQxZjFmZWU3ZmEwMA.png";
-
+public class ImageUtilsTest {
+    private static final String REMOTE_IMG_URL = "https://openwt.com/themes/custom/openwt2018/dist/images/video.png";
     private static final String TMP_DIRECTORY_PATH = "/tmp/test_image_utils";
     private static final File TMP_DIRECTORY = new File(TMP_DIRECTORY_PATH);
 
     @Before
-    public void setup() throws Exception
-    {
+    public void setup() throws IOException {
         // setup temporary directory
         FileUtils.deleteDirectory(TMP_DIRECTORY);
         TMP_DIRECTORY.mkdir();
     }
 
     @After
-    public void tearDown() throws Exception
-    {
+    public void tearDown() throws IOException {
         // delete tmp dir
         FileUtils.deleteDirectory(TMP_DIRECTORY);
     }
 
     @Test
-    public void testLoadImage() throws IOException
-    {
+    public void testLoadImage() throws IOException {
         final File testImage = new ClassPathResource("testImage.png").getFile();
         assertTrue(testImage.exists());
 
@@ -64,15 +53,13 @@ public class ImageUtilsTest
     }
 
     @Test
-    public void testLoadImage_failure()
-    {
+    public void testLoadImage_failure() {
         final File testImage = null;
         assertThrown(() -> ImageUtils.loadImage(testImage)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void testLoadLocaleImage() throws IOException
-    {
+    public void testLoadLocaleImage() throws IOException {
         final String testImage = new ClassPathResource("testImage.png").getFile().getPath();
 
         final BufferedImage result = ImageUtils.loadLocalImage(testImage);
@@ -83,30 +70,26 @@ public class ImageUtilsTest
     }
 
     @Test
-    public void testLoadLocaleImage_failure()
-    {
+    public void testLoadLocaleImage_failure() {
         assertThrown(() -> ImageUtils.loadLocalImage("/tmp/not/exist/something_wrong")).isInstanceOf(IIOException.class);
     }
 
     @Test
-    public void testLoadRemoteImage() throws IOException
-    {
+    public void testLoadRemoteImage() throws IOException {
         final BufferedImage result = ImageUtils.loadRemoteImage(REMOTE_IMG_URL);
 
         assertNotNull(result);
-        assertEquals(200, result.getWidth());
-        assertEquals(200, result.getHeight());
+        assertEquals(956, result.getWidth());
+        assertEquals(534, result.getHeight());
     }
 
     @Test
-    public void testLoadRemoteImage_failure()
-    {
+    public void testLoadRemoteImage_failure() {
         assertThrown(() -> ImageUtils.loadRemoteImage("http://127.0.0.1:12346/not_found.jpg")).isInstanceOf(IIOException.class);
     }
 
     @Test
-    public void testCompressImage() throws IOException
-    {
+    public void testCompressImage() throws IOException {
         final File testImage = new ClassPathResource("testImage.png").getFile();
         assertTrue(testImage.exists());
 
@@ -118,8 +101,7 @@ public class ImageUtilsTest
     }
 
     @Test
-    public void testCompressImageFromString() throws IOException
-    {
+    public void testCompressImageFromString() throws IOException {
         final File testImage = new ClassPathResource("testImage.png").getFile();
         assertTrue(testImage.exists());
         final String outputPath = TMP_DIRECTORY_PATH + "/compressed.jpg";
@@ -132,8 +114,7 @@ public class ImageUtilsTest
     }
 
     @Test
-    public void testCompressImage_outputNotFound() throws IOException
-    {
+    public void testCompressImage_outputNotFound() throws IOException {
         final File testImage = new ClassPathResource("testImage.png").getFile();
         assertTrue(testImage.exists());
 
@@ -141,16 +122,14 @@ public class ImageUtilsTest
     }
 
     @Test
-    public void testCompressImage_badQualityValue() throws IOException
-    {
+    public void testCompressImage_badQualityValue() throws IOException {
         final File testImage = new ClassPathResource("testImage.png").getFile();
         assertTrue(testImage.exists());
         assertThrown(() -> ImageUtils.compressImage(ImageUtils.loadImage(testImage), TMP_DIRECTORY_PATH + "/compressed.jpg", 22f)).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void testResizeImage() throws IOException
-    {
+    public void testResizeImage() throws IOException {
         final File inputImage = new ClassPathResource("testImage.png").getFile();
         final File outputImage = new File(TMP_DIRECTORY_PATH + "/resized.jpg");
 
@@ -168,8 +147,7 @@ public class ImageUtilsTest
     }
 
     @Test
-    public void testResizeImage_withFitExact() throws IOException
-    {
+    public void testResizeImage_withFitExact() throws IOException {
         final File inputImage = new ClassPathResource("testImage.png").getFile();
         final File outputImage = new File(TMP_DIRECTORY_PATH + "/resized.jpg");
 
@@ -187,8 +165,7 @@ public class ImageUtilsTest
     }
 
     @Test
-    public void testResizeImageAndCompress() throws IOException
-    {
+    public void testResizeImageAndCompress() throws IOException {
         final File inputImage = new ClassPathResource("testImage.png").getFile();
         final File outputImage = new File(TMP_DIRECTORY_PATH + "/resized_compressed.jpg");
 
@@ -207,8 +184,7 @@ public class ImageUtilsTest
     }
 
     @Test
-    public void testResizeImageAndCompress_withFitExact() throws IOException
-    {
+    public void testResizeImageAndCompress_withFitExact() throws IOException {
         final File inputImage = new ClassPathResource("testImage.png").getFile();
         final File outputImage = new File(TMP_DIRECTORY_PATH + "/resized_compressed.jpg");
 
@@ -227,15 +203,13 @@ public class ImageUtilsTest
     }
 
     @Test
-    public void testResizeImage_failure()
-    {
+    public void testResizeImage_failure() {
         assertThrown(() -> ImageUtils.resizeImageToFile(null, new File(TMP_DIRECTORY_PATH + "/resized.jpg"), 100))
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
-    public void testResizeImage_withFitExact_failure()
-    {
+    public void testResizeImage_withFitExact_failure() {
         assertThrown(() -> ImageUtils.resizeImageToFile(null, new File(TMP_DIRECTORY_PATH + "/resized.jpg"), 100, 100))
                 .isInstanceOf(IllegalArgumentException.class);
     }

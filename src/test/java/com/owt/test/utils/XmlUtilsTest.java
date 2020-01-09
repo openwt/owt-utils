@@ -1,35 +1,28 @@
 package com.owt.test.utils;
 
-import static com.owt.test.ThrowableAssertion.assertThrown;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import com.owt.utils.XmlUtils;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.junit.Test;
+import org.springframework.core.io.ClassPathResource;
 
+import javax.management.modelmbean.XMLParseException;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
-import javax.management.modelmbean.XMLParseException;
+import static com.owt.test.ThrowableAssertion.assertThrown;
+import static org.junit.Assert.*;
 
-import org.jdom2.Document;
-import org.jdom2.Element;
-import org.junit.Test;
-import org.springframework.core.io.ClassPathResource;
-
-import com.owt.utils.XmlUtils;
-
-public final class XmlUtilsTest
-{
+public final class XmlUtilsTest {
     private static final String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
             + "<xml><persons><person><name>Yolo</name><surname>test</surname></person>"
             + "<person><name>Another</name><surname>test</surname></person></persons></xml>";
 
     @Test
-    public void testParse() throws XMLParseException
-    {
+    public void testParse() throws XMLParseException {
         final InputStream is = new ByteArrayInputStream(xml.getBytes());
         final Document document = XmlUtils.parse(is);
 
@@ -37,20 +30,17 @@ public final class XmlUtilsTest
     }
 
     @Test
-    public void testParse_invalidFilePath()
-    {
+    public void testParse_invalidFilePath() {
         assertThrown(() -> XmlUtils.parse("invalid")).isInstanceOf(XMLParseException.class);
     }
 
     @Test
-    public void testParse_invalidFile()
-    {
+    public void testParse_invalidFile() {
         assertThrown(() -> XmlUtils.parse(new File("alsoInvalid"))).isInstanceOf(XMLParseException.class);
     }
 
     @Test
-    public void testParseInputStream_invalidXML()
-    {
+    public void testParseInputStream_invalidXML() {
         final InputStream is = new ByteArrayInputStream("<xml><xml>".getBytes());
         assertThrown(() -> XmlUtils.parse(is)).isInstanceOf(XMLParseException.class);
 
@@ -59,22 +49,19 @@ public final class XmlUtilsTest
     }
 
     @Test
-    public void testParseInputStream_emptyXML()
-    {
+    public void testParseInputStream_emptyXML() {
         final InputStream is = new ByteArrayInputStream("".getBytes());
         assertThrown(() -> XmlUtils.parse(is)).isInstanceOf(XMLParseException.class);
     }
 
     @Test
-    public void testParseInputStream_nullXML()
-    {
+    public void testParseInputStream_nullXML() {
         final InputStream is = null;
         assertThrown(() -> XmlUtils.parse(is)).isInstanceOf(XMLParseException.class);
     }
 
     @Test
-    public void testFindAllElement() throws XMLParseException
-    {
+    public void testFindAllElement() throws XMLParseException {
         final InputStream is = new ByteArrayInputStream(xml.getBytes());
         final Document document = XmlUtils.parse(is);
 
@@ -97,8 +84,7 @@ public final class XmlUtilsTest
     }
 
     @Test
-    public void testFindFirstElement() throws XMLParseException
-    {
+    public void testFindFirstElement() throws XMLParseException {
         final InputStream is = new ByteArrayInputStream(xml.getBytes());
         final Document document = XmlUtils.parse(is);
 
@@ -116,8 +102,7 @@ public final class XmlUtilsTest
     }
 
     @Test
-    public void testFindFirstElement_NodeNotFound() throws XMLParseException
-    {
+    public void testFindFirstElement_NodeNotFound() throws XMLParseException {
         final InputStream is = new ByteArrayInputStream(xml.getBytes());
         final Document document = XmlUtils.parse(is);
         assertNotNull(document);
@@ -128,8 +113,7 @@ public final class XmlUtilsTest
     }
 
     @Test
-    public void testFindSecondElement() throws XMLParseException
-    {
+    public void testFindSecondElement() throws XMLParseException {
         final InputStream is = new ByteArrayInputStream(xml.getBytes());
         final Document document = XmlUtils.parse(is);
 
@@ -143,8 +127,7 @@ public final class XmlUtilsTest
     }
 
     @Test
-    public void testFindFirstElementValue() throws XMLParseException
-    {
+    public void testFindFirstElementValue() throws XMLParseException {
         final InputStream is = new ByteArrayInputStream(xml.getBytes());
         final Document document = XmlUtils.parse(is);
 
@@ -157,8 +140,7 @@ public final class XmlUtilsTest
     }
 
     @Test
-    public void testFindFirstElementValue_NodeNotFound() throws XMLParseException
-    {
+    public void testFindFirstElementValue_NodeNotFound() throws XMLParseException {
         final InputStream is = new ByteArrayInputStream(xml.getBytes());
         final Document document = XmlUtils.parse(is);
         assertNotNull(document);
@@ -169,8 +151,7 @@ public final class XmlUtilsTest
     }
 
     @Test
-    public void testFindFirstElementValue_EmptyNode() throws XMLParseException
-    {
+    public void testFindFirstElementValue_EmptyNode() throws XMLParseException {
         final InputStream is = new ByteArrayInputStream("<xml><node1>test</node1><node2></node2></xml>".getBytes());
         final Document document = XmlUtils.parse(is);
         assertNotNull(document);
@@ -182,8 +163,7 @@ public final class XmlUtilsTest
     }
 
     @Test
-    public void testParseATC() throws IOException, XMLParseException
-    {
+    public void testParseATC() throws IOException, XMLParseException {
         final File article = new ClassPathResource("test.xml").getFile();
         assertTrue(article.exists());
 
@@ -196,9 +176,9 @@ public final class XmlUtilsTest
         assertNotNull(element);
         assertEquals("Desafiador, promotor dos EUA é demitido pelo governo Trump", XmlUtils.findFirstElementValue(element, "content/title"));
 
-        assertEquals("58c5844dea13a7579298db50_58c5844dea13a7579298db52.txt", XmlUtils.findAttributValue(element, "content/item/@filename"));
-        assertEquals("58c5844dea13a7579298db50_58c5844dea13a7579298db52.txt", XmlUtils.findAttributValue(element, "content/item[1]/@filename"));
-        assertEquals("58c5844dea13a7579298db50_58c5844dea13a7579298db54.xhtml", XmlUtils.findAttributValue(element, "content/item[2]/@filename"));
+        assertEquals("58c5844dea13a7579298db50_58c5844dea13a7579298db52.txt", XmlUtils.findAttributeValue(element, "content/item/@filename"));
+        assertEquals("58c5844dea13a7579298db50_58c5844dea13a7579298db52.txt", XmlUtils.findAttributeValue(element, "content/item[1]/@filename"));
+        assertEquals("58c5844dea13a7579298db50_58c5844dea13a7579298db54.xhtml", XmlUtils.findAttributeValue(element, "content/item[2]/@filename"));
 
     }
 }

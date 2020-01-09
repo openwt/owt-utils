@@ -1,21 +1,6 @@
 package com.owt.test.client;
 
-import static com.owt.test.ThrowableAssertion.assertThrown;
-import static org.hamcrest.CoreMatchers.anyOf;
-import static org.hamcrest.CoreMatchers.equalTo;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.List;
-
+import com.owt.client.FtpClient;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.net.ftp.FTPFile;
 import org.junit.After;
@@ -30,11 +15,20 @@ import org.mockftpserver.fake.filesystem.FileSystem;
 import org.mockftpserver.fake.filesystem.UnixFakeFileSystem;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.owt.client.FtpClient;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static com.owt.test.ThrowableAssertion.assertThrown;
+import static org.hamcrest.CoreMatchers.anyOf;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.junit.Assert.*;
 
 @RunWith(SpringRunner.class)
-public class FtpClientTest
-{
+public class FtpClientTest {
     private static final String HOST = "localhost";
     private static final int PORT = 22222;
     private static final String USERNAME = "user";
@@ -49,8 +43,7 @@ public class FtpClientTest
     private static FakeFtpServer fakeFtpServer;
 
     @BeforeClass
-    public static void setup() throws Exception
-    {
+    public static void setup() throws IOException {
         // setup local directory
         FileUtils.deleteDirectory(TMP_DIRECTORY);
         TMP_DIRECTORY.mkdir();
@@ -71,24 +64,21 @@ public class FtpClientTest
         fakeFtpServer.start();
     }
 
+    @AfterClass
+    public static void afterClass() {
+        // stop ftp
+        fakeFtpServer.stop();
+    }
+
     @After
-    public void tearDown() throws Exception
-    {
+    public void tearDown() throws IOException {
         // delete tmp dir
         FileUtils.deleteDirectory(TMP_DIRECTORY);
         TMP_DIRECTORY.mkdir();
     }
 
-    @AfterClass
-    public static void afterClass()
-    {
-        // stop ftp
-        fakeFtpServer.stop();
-    }
-
     @Test
-    public void testFtpConnect() throws Exception
-    {
+    public void testFtpConnect() throws IOException {
         final FtpClient ftp = new FtpClient();
         ftp.connect(HOST, PORT, USERNAME, PASSWORD);
 
@@ -98,8 +88,7 @@ public class FtpClientTest
     }
 
     @Test
-    public void testFtpConnect_Failure()
-    {
+    public void testFtpConnect_Failure() {
         final FtpClient ftp = new FtpClient();
         assertThrown(() -> ftp.connect("pas_glop", PORT, USERNAME, PASSWORD)).isInstanceOf(UnknownHostException.class);
 
@@ -109,15 +98,13 @@ public class FtpClientTest
     }
 
     @Test
-    public void testFtpBadUser()
-    {
+    public void testFtpBadUser() {
         final FtpClient ftp = new FtpClient();
         assertThrown(() -> ftp.connect(HOST, PORT, "YOLO", "YOLO")).isInstanceOf(IOException.class);
     }
 
     @Test
-    public void testFtpClose() throws Exception
-    {
+    public void testFtpClose() throws IOException {
         final FtpClient ftp = new FtpClient();
         ftp.connect(HOST, PORT, USERNAME, PASSWORD);
 
@@ -131,8 +118,7 @@ public class FtpClientTest
     }
 
     @Test
-    public void testFtpCd() throws Exception
-    {
+    public void testFtpCd() throws IOException {
         final FtpClient ftp = new FtpClient();
         ftp.connect(HOST, PORT, USERNAME, PASSWORD);
 
@@ -142,8 +128,7 @@ public class FtpClientTest
     }
 
     @Test
-    public void testFtpCd_Failure() throws Exception
-    {
+    public void testFtpCd_Failure() throws IOException {
         final FtpClient ftp = new FtpClient();
         ftp.connect(HOST, PORT, USERNAME, PASSWORD);
 
@@ -153,15 +138,13 @@ public class FtpClientTest
     }
 
     @Test
-    public void testFtpCd_NotConnected()
-    {
+    public void testFtpCd_NotConnected() {
         final FtpClient ftp = new FtpClient();
         assertThrown(() -> ftp.cd("/dir")).isInstanceOf(IOException.class);
     }
 
     @Test
-    public void testFtpListFiles() throws Exception
-    {
+    public void testFtpListFiles() throws IOException {
         final FtpClient ftp = new FtpClient();
         ftp.connect(HOST, PORT, USERNAME, PASSWORD);
 
@@ -188,15 +171,13 @@ public class FtpClientTest
     }
 
     @Test
-    public void testFtpListFiles_NotConnected()
-    {
+    public void testFtpListFiles_NotConnected() {
         final FtpClient ftp = new FtpClient();
         assertThrown(() -> ftp.listFiles(REMOTE_DIR)).isInstanceOf(IOException.class);
     }
 
     @Test
-    public void testFtpListFiles_Failure() throws Exception
-    {
+    public void testFtpListFiles_Failure() throws IOException {
         final FtpClient ftp = new FtpClient();
         ftp.connect(HOST, PORT, USERNAME, PASSWORD);
 
@@ -207,8 +188,7 @@ public class FtpClientTest
     }
 
     @Test
-    public void testFtpListFilesWithFilter() throws Exception
-    {
+    public void testFtpListFilesWithFilter() throws IOException {
         final FtpClient ftp = new FtpClient();
         ftp.connect(HOST, PORT, USERNAME, PASSWORD);
 
@@ -229,15 +209,13 @@ public class FtpClientTest
     }
 
     @Test
-    public void testFtpListFilesWithFilter_NotConnected()
-    {
+    public void testFtpListFilesWithFilter_NotConnected() {
         final FtpClient ftp = new FtpClient();
         assertThrown(() -> ftp.ls(REMOTE_DIR, ".txt")).isInstanceOf(IOException.class);
     }
 
     @Test
-    public void testFtpListFilesWithFilterNull() throws Exception
-    {
+    public void testFtpListFilesWithFilterNull() throws IOException {
         final FtpClient ftp = new FtpClient();
         ftp.connect(HOST, PORT, USERNAME, PASSWORD);
 
@@ -247,8 +225,7 @@ public class FtpClientTest
     }
 
     @Test
-    public void testFtpGet() throws Exception
-    {
+    public void testFtpGet() throws IOException {
         final FtpClient ftp = new FtpClient();
         ftp.connect(HOST, PORT, USERNAME, PASSWORD);
 
@@ -282,8 +259,7 @@ public class FtpClientTest
     }
 
     @Test
-    public void testFtpGetWithFilter() throws Exception
-    {
+    public void testFtpGetWithFilter() throws IOException {
         final FtpClient ftp = new FtpClient();
         ftp.connect(HOST, PORT, USERNAME, PASSWORD);
         ftp.mget(ftp.ls(REMOTE_DIR, ".log"), REMOTE_DIR, LOCAL_DIR, 2);
@@ -297,8 +273,7 @@ public class FtpClientTest
     }
 
     @Test
-    public void testFtpGetWithFilterAndLimit() throws Exception
-    {
+    public void testFtpGetWithFilterAndLimit() throws IOException {
         final FtpClient ftp = new FtpClient();
         ftp.connect(HOST, PORT, USERNAME, PASSWORD);
         ftp.mget(ftp.ls(REMOTE_DIR), REMOTE_DIR, LOCAL_DIR, 1);
@@ -312,8 +287,7 @@ public class FtpClientTest
     }
 
     @Test
-    public void testFtpGet_AlreadyExists() throws Exception
-    {
+    public void testFtpGet_AlreadyExists() throws IOException {
         final FtpClient ftp = new FtpClient();
         ftp.connect(HOST, PORT, USERNAME, PASSWORD);
 
@@ -350,8 +324,7 @@ public class FtpClientTest
     }
 
     @Test
-    public void testFtpGet_fail() throws Exception
-    {
+    public void testFtpGet_fail() throws IOException {
         final FtpClient ftp = new FtpClient();
         ftp.connect(HOST, PORT, USERNAME, PASSWORD);
 
@@ -361,8 +334,7 @@ public class FtpClientTest
     }
 
     @Test
-    public void testFtpGet_NotConnected()
-    {
+    public void testFtpGet_NotConnected() {
         final FtpClient ftp = new FtpClient();
         assertThrown(() -> ftp.mget(new ArrayList<>(), REMOTE_DIR, LOCAL_DIR)).isInstanceOf(IOException.class);
     }

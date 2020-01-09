@@ -1,25 +1,21 @@
 package com.owt.test.utils;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
+import com.owt.utils.NumberUtils;
 import org.junit.Test;
 
-import com.owt.utils.NumberUtils;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Open Web Technology.
  *
  * @author Vsevolod Kokurin Open Web Technology
- * 
  * @since 2/27/17
  */
-public class NumberUtilsTest
-{
+public class NumberUtilsTest {
 
     @Test
-    public void testisAllPositive_OK()
-    {
+    public void testisAllPositive_OK() {
         final long a = 1;
         final long b = 2;
 
@@ -27,15 +23,13 @@ public class NumberUtilsTest
     }
 
     @Test
-    public void testisAllPositive_NOK()
-    {
+    public void testisAllPositive_NOK() {
         assertFalse(NumberUtils.isAllPositive(-1, 2));
         assertFalse(NumberUtils.isAllPositive(0, 2));
     }
 
     @Test
-    public void testisAnyNegative_OK()
-    {
+    public void testisAnyNegative_OK() {
         final long a = -1;
         final long b = 2;
 
@@ -43,8 +37,7 @@ public class NumberUtilsTest
     }
 
     @Test
-    public void testisAnyNegative_NOK()
-    {
+    public void testisAnyNegative_NOK() {
         final long a = 1;
         final long b = 2;
 
@@ -52,8 +45,7 @@ public class NumberUtilsTest
     }
 
     @Test
-    public void testIsNegative_OK()
-    {
+    public void testIsNegative_OK() {
         final long a = -1L;
         assertTrue(NumberUtils.isNegative(a));
 
@@ -83,8 +75,7 @@ public class NumberUtilsTest
     }
 
     @Test
-    public void testIsNegative_NOK()
-    {
+    public void testIsNegative_NOK() {
         final long a = 1L;
         assertFalse(NumberUtils.isNegative(a));
 

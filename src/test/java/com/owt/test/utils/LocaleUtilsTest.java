@@ -1,27 +1,23 @@
 package com.owt.test.utils;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import com.owt.utils.LocaleUtils;
+import org.junit.Test;
 
 import java.util.Locale;
 
-import org.junit.Test;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-import com.owt.utils.LocaleUtils;
-
-public class LocaleUtilsTest
-{
+public class LocaleUtilsTest {
 
     @Test
-    public void testValidLanguage()
-    {
+    public void testValidLanguage() {
         assertTrue(LocaleUtils.isValidISO639Language("en"));
         assertTrue(LocaleUtils.isValidISO639Language("ar"));
     }
 
     @Test
-    public void testInvalidLanguage()
-    {
+    public void testInvalidLanguage() {
         assertFalse(LocaleUtils.isValidISO639Language("en1234"));
         assertFalse(LocaleUtils.isValidISO639Language("eng"));
         assertFalse(LocaleUtils.isValidISO639Language("english"));
@@ -33,8 +29,7 @@ public class LocaleUtilsTest
     }
 
     @Test
-    public void testValidLocaleString()
-    {
+    public void testValidLocaleString() {
         assertTrue(LocaleUtils.isValidLocaleString("en"));
         assertTrue(LocaleUtils.isValidLocaleString("ar"));
         assertTrue(LocaleUtils.isValidLocaleString("eng"));
@@ -47,8 +42,7 @@ public class LocaleUtilsTest
     }
 
     @Test
-    public void testInvalidLocaleString()
-    {
+    public void testInvalidLocaleString() {
         assertFalse(LocaleUtils.isValidLocaleString("en1234"));
         assertFalse(LocaleUtils.isValidLocaleString("english"));
         assertFalse(LocaleUtils.isValidLocaleString("ararbic"));
@@ -62,8 +56,7 @@ public class LocaleUtilsTest
     }
 
     @Test
-    public void testValidLocale()
-    {
+    public void testValidLocale() {
         assertTrue(LocaleUtils.isValidLocale(Locale.ENGLISH));
         assertTrue(LocaleUtils.isValidLocale(Locale.KOREA));
         assertTrue(LocaleUtils.isValidLocale(new Locale("en")));
@@ -71,8 +64,7 @@ public class LocaleUtilsTest
     }
 
     @Test
-    public void testInvalidLocale()
-    {
+    public void testInvalidLocale() {
         assertFalse(LocaleUtils.isValidLocale(null));
         assertFalse(LocaleUtils.isValidLocale(new Locale("TROLOLOLO")));
     }

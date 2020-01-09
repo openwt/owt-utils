@@ -1,78 +1,72 @@
-/*
- * Build file
- */
 
-apply plugin: 'java'
-apply plugin: 'jacoco'
+plugins {
+	id 'java-library'
+	id 'jacoco'
+}
+
 
 // In this section you declare where to find the dependencies of your project
 repositories {
-    // Use jcenter for resolving your dependencies.
-    // You can declare any Maven/Ivy/file repository here.
-    jcenter()
+	jcenter()
 }
 
-// config 
-def compatibilitySource = '1.8'
-def compatibilityTarget = '1.8'
-def encoding = 'UTF-8'
+java {
+	sourceCompatibility = JavaVersion.VERSION_11
+	targetCompatibility = JavaVersion.VERSION_11
+}
 
 // dependencies version:
-def springBootVersion = '1.5.9.RELEASE'
+def springBootVersion = '2.2.2.RELEASE'
 
-def gsonVersion = '2.8.2'
+def gsonVersion = '2.8.6'
 
 def jdomVersion = '2.0.6'
-def jaxenVersion = '1.1.6'
+def jaxenVersion = '1.2.0'
 
 def commonsIoVersion = '2.6'
 def commonsNetVersion = '3.6'
-def commonsLangVersion = '3.7'
+def commonsLangVersion = '3.9'
 def commonsValidatorVersion = '1.6'
+def commonsText = '1.8';
 
 def imgscalrVersion = '4.2'
-def sshVersion = '1.6'
-def aspectjVersion = '1.8.13'
+def sshVersion = '1.6.1'
+def aspectjVersion = '1.9.5'
 
 // test dependencies version:
 def mockFtpServerVersion = '2.7.1'
-def sshDeamonVersion = '1.6.0'
+def sshDeamonVersion = '2.3.0'
 
 dependencies {
 
 	// spring boot dependencies
-	compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: springBootVersion
+	implementation group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: springBootVersion
 	
 	// json dependencies
-	compile group: 'com.google.code.gson', name: 'gson', version: gsonVersion
+	implementation group: 'com.google.code.gson', name: 'gson', version: gsonVersion
 	
 	// xml/xpath dependencies
-	compile group: 'org.jdom', name: 'jdom2', version: jdomVersion
-	compile group: 'jaxen', name: 'jaxen', version: jaxenVersion
+	implementation group: 'org.jdom', name: 'jdom2', version: jdomVersion
+	implementation group: 'jaxen', name: 'jaxen', version: jaxenVersion
 	
 	// miscellaneous
-	compile group: 'org.apache.commons', name: 'commons-lang3', version: commonsLangVersion
-	compile group: 'commons-io', name: 'commons-io', version: commonsIoVersion
-	compile group: 'commons-net', name: 'commons-net', version: commonsNetVersion
-	compile group: 'commons-validator', name: 'commons-validator', version: commonsValidatorVersion
-	   		
+	implementation group: 'org.apache.commons', name: 'commons-lang3', version: commonsLangVersion
+	implementation group: 'commons-io', name: 'commons-io', version: commonsIoVersion
+	implementation group: 'commons-net', name: 'commons-net', version: commonsNetVersion
+	implementation group: 'commons-validator', name: 'commons-validator', version: commonsValidatorVersion
+	implementation group: 'org.apache.commons', name: 'commons-text', version: commonsText
+
 	// image scaling
-	compile group: 'org.imgscalr', name: 'imgscalr-lib', version: imgscalrVersion
+	implementation group: 'org.imgscalr', name: 'imgscalr-lib', version: imgscalrVersion
 	
 	// ssh utility
-	compile group: 'com.jcabi', name: 'jcabi-ssh', version: sshVersion
-	compile group: 'org.aspectj', name: 'aspectjweaver', version: aspectjVersion
+	implementation group: 'com.jcabi', name: 'jcabi-ssh', version: sshVersion
+	implementation group: 'org.aspectj', name: 'aspectjweaver', version: aspectjVersion
 	
 	// test dependencies
-	testCompile group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion
-	testCompile group: 'org.mockftpserver', name: 'MockFtpServer', version: mockFtpServerVersion
-	compile group: 'org.apache.sshd', name: 'sshd-core', version: sshDeamonVersion
-}
-
-tasks.withType(JavaCompile) {
-    sourceCompatibility = JavaVersion.toVersion(compatibilitySource)
-    targetCompatibility = JavaVersion.toVersion(compatibilityTarget)
-    options.encoding = encoding
+	testImplementation group: 'org.springframework.boot', name: 'spring-boot-starter-test', version: springBootVersion
+	testImplementation group: 'org.mockftpserver', name: 'MockFtpServer', version: mockFtpServerVersion
+	implementation group: 'org.apache.sshd', name: 'sshd-core', version: sshDeamonVersion
 }
 
 test {

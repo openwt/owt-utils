@@ -1,25 +1,22 @@
 package com.owt.utils;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.apache.commons.lang3.CharUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
+import org.springframework.http.CacheControl;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang3.CharUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.http.CacheControl;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * WebUtils, utility class web related
  *
  * @author DBO, Open Web Technology
  * @since 26 October 2015
- *
  */
-public final class WebUtils
-{
+public final class WebUtils {
     private static final String XHR = "XMLHttpRequest";
 
     private static final String HTTP_PROTOCOL = "http";
@@ -44,18 +41,15 @@ public final class WebUtils
     // Official RFC 5322 regex implementation with limitation on domain name
     private static final String EMAIL_REGEX = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@((\\[[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\])|(([a-zA-Z\\-0-9]+\\.)+[a-zA-Z]{2,}))$";
 
-    private WebUtils()
-    {
+    private WebUtils() {
 
     }
 
-    public static Object getSessionAttribute(final HttpServletRequest request, final String name)
-    {
+    public static Object getSessionAttribute(final HttpServletRequest request, final String name) {
         return org.springframework.web.util.WebUtils.getSessionAttribute(request, name);
     }
 
-    public static void setSessionAttribute(final HttpServletRequest request, final String name, final Object value)
-    {
+    public static void setSessionAttribute(final HttpServletRequest request, final String name, final Object value) {
         org.springframework.web.util.WebUtils.setSessionAttribute(request, name, value);
     }
 
@@ -63,10 +57,8 @@ public final class WebUtils
      * Set Response without cache.
      *
      * @param response response to set
-     * @throws Exception if invalide Argument
      */
-    public static void setNoCache(final HttpServletResponse response)
-    {
+    public static void setNoCache(final HttpServletResponse response) {
         if (response != null) {
             response.setHeader(HEADER_CACHE_CONTROL, HEADER_CACHE_CONTROL_VALUE); // HTTP 1.1
             response.setHeader(HEADER_CACHE_PRAGMA, HEADER_CACHE_VALUE_NO_CACHE); // HTTP 1.
@@ -78,10 +70,8 @@ public final class WebUtils
      * Set Response with cache.
      *
      * @param response response to set
-     * @throws Exception if invalide Argument
      */
-    public static void setCache(final HttpServletResponse response, final CacheControl cacheControl)
-    {
+    public static void setCache(final HttpServletResponse response, final CacheControl cacheControl) {
         if (response != null) {
             if (cacheControl != null) {
                 response.setHeader(HEADER_CACHE_CONTROL, cacheControl.getHeaderValue()); // HTTP
@@ -94,18 +84,15 @@ public final class WebUtils
     /**
      * Set the access control headers.
      *
-     * @param routeService the routeService
-     * @param request the HTTP request
+     * @param url      string
      * @param response the HTTP response
      */
-    public static void setAccessControlHeader(final String url, final HttpServletResponse response)
-    {
+    public static void setAccessControlHeader(final String url, final HttpServletResponse response) {
         response.setHeader(HEADER_ACCESS_CONTROL_ALLOW_ORIGIN, url);
         response.setHeader(HEADER_ACCESS_CONTROL_ALLOW_CREDENTIALS, "true");
     }
 
-    public static String addHttpPrefixToUrlIfMissing(final String url)
-    {
+    public static String addHttpPrefixToUrlIfMissing(final String url) {
         return StringUtils.isBlank(url) || url.toLowerCase().startsWith(HTTP_PROTOCOL) ? url : HTTP_PREFIX + url;
     }
 
@@ -115,13 +102,11 @@ public final class WebUtils
      * @param request request to check
      * @return true if ajax
      */
-    public static boolean isXhr(final HttpServletRequest request)
-    {
+    public static boolean isXhr(final HttpServletRequest request) {
         return XHR.equals(request.getHeader(HTTP_HEADER_X_REQUESTED_WITH));
     }
 
-    public static boolean isValidEmail(final String email)
-    {
+    public static boolean isValidEmail(final String email) {
         final Pattern regexPattern = Pattern.compile(EMAIL_REGEX);
         final Matcher match = regexPattern.matcher(email);
         return match.matches();
@@ -134,9 +119,7 @@ public final class WebUtils
      * @param raw UTF-8 string to encode
      * @return HTML-encoded String
      */
-    @Deprecated
-    public static String htmlEncode(final String raw)
-    {
+    public static String htmlEncode(final String raw) {
         final StringBuilder html = new StringBuilder();
         for (int i = 0; i < raw.length(); i++) {
             final Character character = raw.charAt(i);

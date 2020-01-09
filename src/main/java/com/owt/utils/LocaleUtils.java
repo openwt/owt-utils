@@ -1,47 +1,40 @@
 package com.owt.utils;
 
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.Set;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.apache.commons.lang3.StringUtils.isNotBlank;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
- * LocaleUtils Utility class for parsing and validation based on standard ISO-639 Created by Open
- * Web Technology.
+ * LocaleUtils Utility class for parsing and validation based on standard ISO-639
+ * Created by Open Web Technology.
  *
  * @author DBO, Open Web Technology
  * @since 15 jan 2015
- *
  */
-public final class LocaleUtils
-{
+public final class LocaleUtils {
     private static final int MAX_LOCAL_PARTS = 4;
     private static final Logger LOGGER = LoggerFactory.getLogger(LocaleUtils.class);
-    private static final Set<String> ISO_LANGUAGES = new HashSet<>(Arrays.asList(Locale.getISOLanguages()));
-    private static final Set<String> ISO_COUNTRIES = new HashSet<>(Arrays.asList(Locale.getISOCountries()));
+    private static final Set<String> ISO_LANGUAGES = Set.of(Locale.getISOLanguages());
+    private static final Set<String> ISO_COUNTRIES = Set.of(Locale.getISOCountries());
 
-    private LocaleUtils()
-    {
+    private LocaleUtils() {
     }
 
-    public static boolean isValidISO639Language(final String s)
-    {
-        return ISO_LANGUAGES.contains(s);
+    public static boolean isValidISO639Language(final String s) {
+        return isNotBlank(s) && ISO_LANGUAGES.contains(s);
     }
 
-    public static boolean isValidISO639Country(final String s)
-    {
-        return ISO_COUNTRIES.contains(s);
+    public static boolean isValidISO639Country(final String s) {
+        return isNotBlank(s) && ISO_COUNTRIES.contains(s);
     }
 
-    private static Locale parseLocale(final String locale)
-    {
+    private static Locale parseLocale(final String locale) {
         if (isNotEmpty(locale)) {
 
             final String[] parts = locale.split("_");
@@ -61,24 +54,20 @@ public final class LocaleUtils
         throw new IllegalArgumentException("Invalid locale: " + locale);
     }
 
-    public static boolean isValidLocaleString(final String localeStr)
-    {
+    public static boolean isValidLocaleString(final String localeStr) {
         try {
             final Locale locale = parseLocale(localeStr);
             return locale.getISO3Language() != null && locale.getISO3Country() != null;
-        }
-        catch (final RuntimeException e) {
+        } catch (final RuntimeException e) {
             LOGGER.debug("isValidLocaleString - Exception occured", e);
             return false;
         }
     }
 
-    public static boolean isValidLocale(final Locale locale)
-    {
+    public static boolean isValidLocale(final Locale locale) {
         try {
             return locale != null && locale.getISO3Language() != null && locale.getISO3Country() != null;
-        }
-        catch (final MissingResourceException e) {
+        } catch (final MissingResourceException e) {
             LOGGER.debug("IsValidLocale - Exception occured", e);
             return false;
         }

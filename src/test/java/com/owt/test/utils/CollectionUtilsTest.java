@@ -1,30 +1,26 @@
 package com.owt.test.utils;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import com.owt.utils.CollectionUtils;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.junit.Test;
-
-import com.owt.utils.CollectionUtils;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Open Web Technology.
  *
  * @author Loïc Bernollin Open Web Technology
  * @since 3 déc. 2015
- * 
  */
-public class CollectionUtilsTest
-{
+public class CollectionUtilsTest {
 
     @Test
-    public void testCollectionIsNotEmpty()
-    {
+    public void testCollectionIsNotEmpty() {
         List<String> list = null;
         assertFalse(CollectionUtils.isNotEmpty(list));
 
@@ -36,8 +32,7 @@ public class CollectionUtilsTest
     }
 
     @Test
-    public void testMapIsNotEmpty()
-    {
+    public void testMapIsNotEmpty() {
         Map<String, String> map = null;
         assertFalse(CollectionUtils.isNotEmpty(map));
 

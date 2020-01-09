@@ -1,26 +1,20 @@
 package com.owt.test.utils;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-
+import com.owt.utils.WebUtils;
 import org.junit.Test;
 
-import com.owt.utils.WebUtils;
+import static org.junit.Assert.*;
 
 /**
  * Created by Open Web Technology.
  *
  * @author DBO Open Web Technology
  * @since 26 October 2015
- *
  */
-public class WebUtilsTest
-{
+public class WebUtilsTest {
 
     @Test
-    public void testHtmlEncode()
-    {
+    public void testHtmlEncode() {
         final String serviceUnavailable = WebUtils.htmlEncode("الخدمة غير متوفرة");
         final String serviceUnavailableEncoded = "&#x627;&#x644;&#x62e;&#x62f;&#x645;&#x629; &#x63a;&#x64a;&#x631; &#x645;&#x62a;&#x648;&#x641;&#x631;&#x629;";
 
@@ -35,8 +29,7 @@ public class WebUtilsTest
     }
 
     @Test
-    public void testValidEmail()
-    {
+    public void testValidEmail() {
         assertTrue(WebUtils.isValidEmail("test@test.fr"));
         assertTrue(WebUtils.isValidEmail("test75@test.fr"));
         assertTrue(WebUtils.isValidEmail("q@q--q.qq"));

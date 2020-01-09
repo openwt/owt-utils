@@ -11,20 +11,13 @@ import java.util.Locale;
  *
  * @author Loïc Bernollin Open Web Technology
  * @since 5 nov. 2015
- *
  */
-public final class CurrencyUtils
-{
+public final class CurrencyUtils {
 
     private static final int SCALE_2 = 2;
-
     private static final int SCALE_3 = 3;
-
-    public static final String AMOUNT_DISPLAY_PATTERN;
-
+    private static final String AMOUNT_DISPLAY_PATTERN;
     private static final DecimalFormat FORMATTER;
-
-    public static final String DEFAULT_CURRENCY = "USD";
 
     static {
         AMOUNT_DISPLAY_PATTERN = "##0.00";
@@ -32,56 +25,49 @@ public final class CurrencyUtils
         FORMATTER.setRoundingMode(RoundingMode.DOWN);
     }
 
-    private CurrencyUtils()
-    {
+    private CurrencyUtils() {
 
     }
 
-    public static String convertAmount(final double baseAmount, final double ratePerUsd)
-    {
+    public static String convertAmount(final double baseAmount, final double ratePerUsd) {
         if (baseAmount > 0.00 && ratePerUsd > 0.00) {
             return FORMATTER.format(baseAmount * ratePerUsd);
         }
         return "";
     }
 
-    public static String convertAmount(final double baseAmount, final double ratePerUsd, final Locale locale)
-    {
+    public static String convertAmount(final double baseAmount, final double ratePerUsd, final Locale locale) {
         if (baseAmount > 0.00 && ratePerUsd > 0.00) {
             return formatAmountByLocal(baseAmount * ratePerUsd, locale);
         }
         return "";
     }
 
-    public static String formatAmountByLocal(final Double amount, final Locale locale)
-    {
+    public static String formatAmountByLocal(final Double amount, final Locale locale) {
         final DecimalFormat decimalFormat = (DecimalFormat) getCurrentCurrencyFormat(locale);
         decimalFormat.applyPattern(AMOUNT_DISPLAY_PATTERN);
         decimalFormat.setRoundingMode(RoundingMode.DOWN);
         return decimalFormat.format(amount);
     }
 
-    public static String formatAmountByLocalWithPattern(final Double amount, final Locale locale, final String pattern)
-    {
+    public static String formatAmountByLocalWithPattern(final Double amount, final Locale locale, final String pattern) {
         final DecimalFormat decimalFormat = (DecimalFormat) getCurrentCurrencyFormat(locale);
         decimalFormat.applyPattern(pattern);
         decimalFormat.setRoundingMode(RoundingMode.DOWN);
         return decimalFormat.format(amount);
     }
 
-    public static String formatAmountByLocal(final Double amount, final String localeStr)
-    {
+    public static String formatAmountByLocal(final Double amount, final String localeStr) {
         return formatAmountByLocal(amount, new Locale(localeStr));
     }
 
     /**
      * getCurrentCurrencyFormat return the current currency format based on the current locale.
      *
-     * @param locale
+     * @param locale, Locale
      * @return String
      */
-    private static NumberFormat getCurrentCurrencyFormat(final Locale locale)
-    {
+    private static NumberFormat getCurrentCurrencyFormat(final Locale locale) {
         return NumberFormat.getCurrencyInstance(locale);
     }
 
@@ -89,18 +75,16 @@ public final class CurrencyUtils
      * roundAmount implementation of this method can be explained by reading its Unit tests
      * (CurrencyUtilsTest)
      *
-     * @param amount
+     * @param amount, double
      * @return BigDecimal
      */
-    public static double roundAmount(final double amount)
-    {
+    public static double roundAmount(final double amount) {
         BigDecimal bd = BigDecimal.valueOf(amount).setScale(SCALE_3, RoundingMode.HALF_UP);
         bd = bd.setScale(SCALE_2, RoundingMode.HALF_DOWN);
         return bd.doubleValue();
     }
 
-    public static String formatAmount(final Double amount, final String format)
-    {
+    public static String formatAmount(final Double amount, final String format) {
         final DecimalFormat formatter = new DecimalFormat(format);
         return formatter.format(amount);
     }

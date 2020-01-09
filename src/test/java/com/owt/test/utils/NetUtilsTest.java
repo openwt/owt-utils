@@ -1,18 +1,15 @@
 package com.owt.test.utils;
 
+import com.owt.utils.NetUtils;
+import org.junit.Test;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Test;
-
-import com.owt.utils.NetUtils;
-
-public class NetUtilsTest
-{
+public class NetUtilsTest {
 
     @Test
-    public void TestIsValidIP()
-    {
+    public void TestIsValidIP() {
         assertTrue(NetUtils.isValidIPv4("1.1.1.1"));
         assertTrue(NetUtils.isValidIPv4("255.255.255.255"));
         assertTrue(NetUtils.isValidIPv4("192.168.1.1"));
@@ -37,8 +34,7 @@ public class NetUtilsTest
     }
 
     @Test
-    public void TestIsNotValidIP()
-    {
+    public void TestIsNotValidIP() {
         assertFalse(NetUtils.isNotValidIPv4("1.1.1.1"));
         assertFalse(NetUtils.isNotValidIPv4("255.255.255.255"));
         assertFalse(NetUtils.isNotValidIPv4("192.168.1.1"));

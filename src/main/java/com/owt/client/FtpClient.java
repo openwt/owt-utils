@@ -1,31 +1,27 @@
 package com.owt.client;
 
-import static com.owt.utils.CollectionUtils.isNotEmpty;
-import static org.apache.commons.lang3.StringUtils.isNotEmpty;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.net.ftp.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.Instant;
-import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.net.ftp.FTP;
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
-import org.apache.commons.net.ftp.FTPFileFilter;
-import org.apache.commons.net.ftp.FTPReply;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static com.owt.utils.CollectionUtils.isNotEmpty;
+import static org.apache.commons.lang3.StringUtils.isNotEmpty;
 
 /**
  * FTPClient encapsulates all the functionality necessary to store and retrieve files from an FTP
  * server. It's a facade of org.apache.commons.net.ftp.FTPClient
  */
-public class FtpClient extends FTPClient
-{
+public class FtpClient extends FTPClient {
     private static final String DELIMITER = "/";
 
     private static final String FTP_DISCONNECTED_MSG = "Unable to list remote directory, ftp is disconnected";
@@ -38,8 +34,7 @@ public class FtpClient extends FTPClient
     private static final boolean REMOTE_FINGERPRINT_VERIFICATION = false;
     private static final boolean AUTODETECT_UTF8 = true;
 
-    public void connect(final String url, final int port, final String username, final String password) throws IOException
-    {
+    public void connect(final String url, final int port, final String username, final String password) throws IOException {
         LOGGER.info("Start ftp connection to {}", url);
 
         // skip the remote verification => trust the server
@@ -70,8 +65,7 @@ public class FtpClient extends FTPClient
         }
     }
 
-    public void cd(final String directory) throws IOException
-    {
+    public void cd(final String directory) throws IOException {
         if (!isConnected()) {
             throw new IOException("Unable to change remote directory, ftp is disconnected");
         }
@@ -84,19 +78,17 @@ public class FtpClient extends FTPClient
         }
     }
 
-    public List<FTPFile> ls(final String remoteDirectory) throws IOException
-    {
+    public List<FTPFile> ls(final String remoteDirectory) throws IOException {
         LOGGER.debug("List files from remote directory {}", remoteDirectory);
 
         if (!isConnected()) {
             throw new IOException(FTP_DISCONNECTED_MSG);
         }
 
-        return Arrays.asList(super.listFiles(remoteDirectory));
+        return List.of(super.listFiles(remoteDirectory));
     }
 
-    public List<FTPFile> ls(final String remoteDirectory, final String contains) throws IOException
-    {
+    public List<FTPFile> ls(final String remoteDirectory, final String contains) throws IOException {
         LOGGER.debug("List files from remote directory {} contains {}", remoteDirectory, contains);
 
         if (!isConnected()) {
@@ -104,11 +96,10 @@ public class FtpClient extends FTPClient
         }
 
         final FTPFileFilter filter = ftpFile -> ftpFile.isFile() && ftpFile.getName().contains(contains != null ? contains : "");
-        return Arrays.asList(listFiles(remoteDirectory, filter));
+        return List.of(listFiles(remoteDirectory, filter));
     }
 
-    public List<FTPFile> ls(final String remoteDirectory, final String contains, final Instant dateLimit) throws IOException
-    {
+    public List<FTPFile> ls(final String remoteDirectory, final String contains, final Instant dateLimit) throws IOException {
         LOGGER.debug("List files from remote directory {} contains {} and after {}", remoteDirectory, contains, dateLimit);
 
         if (!isConnected()) {
@@ -119,13 +110,12 @@ public class FtpClient extends FTPClient
                 && ftpFile.getName().contains(contains != null ? contains : "")
                 && ftpFile.getTimestamp().toInstant().isAfter(dateLimit);
 
-        return Arrays.stream(listFiles(remoteDirectory, filters))
-                .sorted((f1, f2) -> Long.compare(f1.getTimestamp().getTimeInMillis(), f2.getTimestamp().getTimeInMillis()))
+        return Stream.of(listFiles(remoteDirectory, filters))
+                .sorted(Comparator.comparingLong(f -> f.getTimestamp().getTimeInMillis()))
                 .collect(Collectors.toList());
     }
 
-    public void get(final FTPFile ftpFile, final String remoteDirectory, final String outputDirectory) throws IOException
-    {
+    public void get(final FTPFile ftpFile, final String remoteDirectory, final String outputDirectory) throws IOException {
         if (!isConnected()) {
             throw new IOException("Unable to get remote file, ftp is disconnected");
         }
@@ -135,8 +125,8 @@ public class FtpClient extends FTPClient
             final String filePath = outputDirectory + DELIMITER + ftpFile.getName();
             LOGGER.debug("Get ftp file {} to local file {}", remoteFilePath, filePath);
 
-            try (FileOutputStream fos = new FileOutputStream(filePath)) {
-                try (InputStream is = retrieveFileStream(remoteFilePath)) {
+            try (final FileOutputStream fos = new FileOutputStream(filePath)) {
+                try (final InputStream is = retrieveFileStream(remoteFilePath)) {
                     IOUtils.copy(is, fos);
                     fos.flush();
                 }
@@ -149,8 +139,7 @@ public class FtpClient extends FTPClient
 
     }
 
-    public void mget(final List<FTPFile> ftpFiles, final String remoteDirectory, final String outputDirectory) throws IOException
-    {
+    public void mget(final List<FTPFile> ftpFiles, final String remoteDirectory, final String outputDirectory) throws IOException {
         if (!isConnected()) {
             throw new IOException("Unable to get remote files, ftp is disconnected");
         }
@@ -162,8 +151,7 @@ public class FtpClient extends FTPClient
         }
     }
 
-    public void mget(final List<FTPFile> ftpFiles, final String remoteDirectory, final String outputDirectory, final int limit) throws IOException
-    {
+    public void mget(final List<FTPFile> ftpFiles, final String remoteDirectory, final String outputDirectory, final int limit) throws IOException {
         if (!isConnected()) {
             throw new IOException("Unable to get remote files, ftp is disconnected");
         }
@@ -178,8 +166,7 @@ public class FtpClient extends FTPClient
         }
     }
 
-    public void close() throws IOException
-    {
+    public void close() throws IOException {
         LOGGER.info("Closing ftp connecting");
         logout();
         disconnect();

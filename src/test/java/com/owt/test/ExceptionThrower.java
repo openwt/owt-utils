@@ -5,15 +5,13 @@ package com.owt.test;
  *
  * @author DBO Open Web Technology
  * @since 28 mai 2015
- * 
  */
-public interface ExceptionThrower
-{
+public interface ExceptionThrower {
 
-	/**
-	 * throwException
-	 *
-	 * @throws Throwable
-	 */
-	void throwException() throws Throwable;
+    /**
+     * throwException
+     *
+     * @throws Throwable, a throwable
+     */
+    void throwException() throws Throwable;
 }

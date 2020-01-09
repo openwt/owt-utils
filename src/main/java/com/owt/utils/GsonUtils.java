@@ -1,36 +1,23 @@
 package com.owt.utils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Set;
-
-import com.google.gson.Gson;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
+
+import java.util.*;
+import java.util.Map.Entry;
 
 /**
  * GsonUtils, utility class for using gson library
  *
  * @author DBO, Open Web Technology
  * @since 1 july 2015
- *
  */
-public final class GsonUtils
-{
-    private static JsonParser jsonParser = new JsonParser();
+public final class GsonUtils {
 
-    private GsonUtils()
-    {
+    private GsonUtils() {
     }
 
-    public static <T> JsonArray convertCollectionToJsonArray(final List<T> collection)
-    {
+    public static <T> JsonArray convertCollectionToJsonArray(final List<T> collection) {
         return new Gson().toJsonTree(collection).getAsJsonArray();
     }
 
@@ -40,8 +27,7 @@ public final class GsonUtils
      * @param object object to convert
      * @return the object
      */
-    public static <T> JsonObject convertObjectToJsonObject(final T object)
-    {
+    public static <T> JsonObject convertObjectToJsonObject(final T object) {
         return new Gson().toJsonTree(object).getAsJsonObject();
     }
 
@@ -51,21 +37,18 @@ public final class GsonUtils
      * @param str String to convert
      * @return json Object
      */
-    public static JsonObject convertStringToJsonObject(final String str)
-    {
-        return jsonParser.parse(str).getAsJsonObject();
+    public static JsonObject convertStringToJsonObject(final String str) {
+        return JsonParser.parseString(str).getAsJsonObject();
     }
 
     /**
      * Return an Map from a json object.
      *
-     * @param jsonObject
+     * @param jsonObject, JsonObject
      * @return Map
      */
-    public static Object convertJsonObjectToHashMap(final JsonObject jsonObject)
-    {
-        return new Gson().fromJson(jsonObject, new TypeToken<Map<String, Object>>()
-        {
+    public static Object convertJsonObjectToHashMap(final JsonObject jsonObject) {
+        return new Gson().fromJson(jsonObject, new TypeToken<Map<String, Object>>() {
             // Map conversion
         }.getType());
     }
@@ -74,12 +57,11 @@ public final class GsonUtils
      * Convert a Json String into a Collection on Typed element.
      *
      * @param strJson String to convert
-     * @param klass expected type
+     * @param klass   expected type
      * @return list of Type
      */
-    public static <T> List<T> convertJsonStringToCollection(final String strJson, final Class<T> klass)
-    {
-        final JsonArray array = new JsonParser().parse(strJson).getAsJsonArray();
+    public static <T> List<T> convertJsonStringToCollection(final String strJson, final Class<T> klass) {
+        final JsonArray array = JsonParser.parseString(strJson).getAsJsonArray();
         final Gson g = new Gson();
         final List<T> lst = new ArrayList<>();
         for (final JsonElement json : array) {
@@ -89,14 +71,12 @@ public final class GsonUtils
         return lst;
     }
 
-    public static JsonElement convertJsonStringToElement(final String strJson)
-    {
-        return jsonParser.parse(strJson);
+    public static JsonElement convertJsonStringToElement(final String strJson) {
+        return JsonParser.parseString(strJson);
     }
 
-    public static Map<String, String> convertJsonStringToMap(final String strJson)
-    {
-        final JsonElement element = jsonParser.parse(strJson);
+    public static Map<String, String> convertJsonStringToMap(final String strJson) {
+        final JsonElement element = JsonParser.parseString(strJson);
 
         if (element.isJsonArray()) {
 
@@ -125,9 +105,8 @@ public final class GsonUtils
         }
     }
 
-    public static Map<String, Object> convertJsonStringToObjectMap(final String strJson)
-    {
-        final JsonElement element = jsonParser.parse(strJson);
+    public static Map<String, Object> convertJsonStringToObjectMap(final String strJson) {
+        final JsonElement element = JsonParser.parseString(strJson);
 
         if (element.isJsonArray()) {
 
@@ -160,13 +139,11 @@ public final class GsonUtils
         }
     }
 
-    public static boolean isEmptyJsonArray(final JsonArray array)
-    {
+    public static boolean isEmptyJsonArray(final JsonArray array) {
         return array == null || array.size() == 0;
     }
 
-    public static boolean isNotEmptyJsonArray(final JsonArray array)
-    {
+    public static boolean isNotEmptyJsonArray(final JsonArray array) {
         return !isEmptyJsonArray(array);
     }
 }

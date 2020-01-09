@@ -1,13 +1,10 @@
 package com.owt.test.client;
 
-import static org.junit.Assert.assertNull;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.InetAddress;
-import java.net.ServerSocket;
-
+import com.jcabi.ssh.Shell;
+import com.jcabi.ssh.Ssh;
+import com.owt.client.SshClient;
+import com.owt.mock.ssh.MockCommandCreator;
+import com.owt.mock.ssh.MockSshServerBuilder;
 import org.apache.commons.io.input.NullInputStream;
 import org.apache.sshd.server.SshServer;
 import org.hamcrest.MatcherAssert;
@@ -16,15 +13,32 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import com.jcabi.ssh.Shell;
-import com.jcabi.ssh.Ssh;
-import com.owt.client.SshClient;
-import com.owt.mock.ssh.MockCommandCreator;
-import com.owt.mock.ssh.MockSshServerBuilder;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.ServerSocket;
+
+import static org.junit.Assert.assertNull;
 
 @RunWith(SpringRunner.class)
-public class SshClientTest
-{
+public class SshClientTest {
+
+    /**
+     * Allocate free port.
+     *
+     * @return Found port.
+     * @throws IOException In case of error.
+     */
+    private static int getPort() throws IOException {
+        int port = Ssh.PORT;
+
+        try (final ServerSocket socket = new ServerSocket(0)) {
+            port = socket.getLocalPort();
+        }
+
+        return port;
+    }
 
     /**
      * test connect ssh with a private key
@@ -32,8 +46,7 @@ public class SshClientTest
      * @throws IOException
      */
     @Test
-    public void testSSh() throws IOException
-    {
+    public void testSSh() throws IOException {
         final int port = getPort();
 
         final MockSshServerBuilder mockSshServerBuilder = new MockSshServerBuilder(port).usePublicKeyAuthentication();
@@ -48,7 +61,7 @@ public class SshClientTest
             final Shell client = SshClient.connect(InetAddress.getLocalHost().getCanonicalHostName(), "test", port, privateKey);
             final ByteArrayOutputStream output = new ByteArrayOutputStream();
 
-            try (InputStream is = new NullInputStream(0L)) {
+            try (final InputStream is = new NullInputStream(0L)) {
                 final int exit = client.exec(
                         cmd,
                         is,
@@ -61,8 +74,7 @@ public class SshClientTest
     }
 
     @Test
-    public void testSSh_BadPrivateKey() throws IOException
-    {
+    public void testSSh_BadPrivateKey() throws IOException {
         final int port = getPort();
 
         final MockSshServerBuilder mockSshServerBuilder = new MockSshServerBuilder(port).usePublicKeyAuthentication();
@@ -78,8 +90,7 @@ public class SshClientTest
     }
 
     @Test
-    public void testSSh_InvalidHost() throws IOException
-    {
+    public void testSSh_InvalidHost() throws IOException {
         final int port = getPort();
 
         final MockSshServerBuilder mockSshServerBuilder = new MockSshServerBuilder(port).usePublicKeyAuthentication();
@@ -92,22 +103,5 @@ public class SshClientTest
             final Shell client = SshClient.connect("123.123.123.123", "test", port, privateKey);
             assertNull(client);
         }
-    }
-
-    /**
-     * Allocate free port.
-     *
-     * @return Found port.
-     * @throws IOException In case of error.
-     */
-    private static int getPort() throws IOException
-    {
-        int port = Ssh.PORT;
-
-        try (final ServerSocket socket = new ServerSocket(0)) {
-            port = socket.getLocalPort();
-        }
-
-        return port;
     }
 }
