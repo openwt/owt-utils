@@ -17,6 +17,47 @@ import static org.junit.Assert.assertNotNull;
 public class CurrencyUtilsTest {
 
     @Test
+    public void testFormatAmount() {
+
+        assertEquals("0", formatAmount(0.00, "#.##"));
+        assertEquals("1", formatAmount(1.0, "#.##"));
+        assertEquals("12", formatAmount(12.0, "#.##"));
+        assertEquals("1000000000000", formatAmount((double) 1000000000000L, "#.##"));
+        assertEquals("3.14", formatAmount(3.14159, "#.##"));
+        assertEquals("314159", formatAmount(314159.0, "#.##"));
+        assertEquals("314159.14", formatAmount(314159.14159, "#.##"));
+        assertEquals("1234.1234", formatAmount(1234.1234, "#.####"));
+        assertEquals("1234.1234", formatAmount(1234.1234, "##.####"));
+        assertEquals("1.1234", formatAmount(1.1234, "##.####"));
+        assertEquals("11234", formatAmount(11234.1234, "#"));
+
+        assertEquals(".00", formatAmount(0.00, "#.00"));
+        assertEquals("1.00", formatAmount(1.0, "#.00"));
+        assertEquals("12.00", formatAmount(12.0, "#.00"));
+        assertEquals("1000000000000.00", formatAmount((double) 1000000000000L, "#.00"));
+        assertEquals("3.14", formatAmount(3.14159, "#.00"));
+        assertEquals("314159.00", formatAmount(314159.0, "#.00"));
+        assertEquals("314159.14", formatAmount(314159.14159, "#.00"));
+        assertEquals("1234.1200", formatAmount(1234.12, "##.0000"));
+        assertEquals("1234.1234", formatAmount(1234.1234, "##.0000"));
+        assertEquals("11234", formatAmount(11234.1234, "0"));
+
+        assertEquals("0", formatAmount(0.0, "0"));
+        assertEquals("1.00", formatAmount(1.0, "0.00"));
+        assertEquals("12.00", formatAmount(12.0, "0.00"));
+        assertEquals("1000000000000.00", formatAmount((double) 1000000000000L, "0.00"));
+        assertEquals("3.14", formatAmount(3.14159, "0.00"));
+        assertEquals("314159.00", formatAmount(314159.0, "00.00"));
+        assertEquals("314159.14", formatAmount(314159.14159, "0.00"));
+        assertEquals("1234.12", formatAmount(1234.12, "00.00"));
+        assertEquals("1234.1200", formatAmount(1234.12, "00.0000"));
+        assertEquals("11234", formatAmount(11234.1234, "0"));
+        assertEquals(".12", formatAmount(00.122346546, ".00"));
+        assertEquals("123132132.56", formatAmount(123132132.56464654, "0.00"));
+    }
+
+
+    @Test
     public void testZeroAmount() {
         final String targetAmount = convertAmount(0.00, 0.00, new Locale("en", "US"));
         assertNotNull(targetAmount);
